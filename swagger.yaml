@@ -2,74 +2,68 @@
 swagger: "2.0"
 info:
   description:
-    "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
+    "This This is a host for cargosprint public api documentation. You\
+    \ can use our API to search facilities and make payments. We are currently\
+    \  in development and will have more features coming soon. You can also visit\
+    \ [CargoSprint's main website.](https://cargosprint.com/)"
+  version: "1.0.0"
+  title: "CargoSprint Public Api Swagger"
+  termsOfService: "https://cargosprint.com/legal/terms-of-use/sprintpay"
   contact:
-    email: "apiteam@swagger.io"
+    email: "support@cargosprint.com"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
+host: "cargosprintgroup.com"
+basePath: ""
 tags:
-  - name: "pet"
-    description: "Everything about your Pets"
-    externalDocs:
-      description: "Find out more"
-      url: "http://swagger.io"
-  - name: "store"
-    description: "Access to Petstore orders"
-  - name: "user"
-    description: "Operations about user"
-    externalDocs:
-      description: "Find out more about our store"
-      url: "http://swagger.io"
+  - name: "authentication"
+    description: "Token needed to access service APIs"
+  #   externalDocs:
+  #     description: "Find out more"
+  #     url: "http://swagger.io"
+  # - name: "store"
+  #   description: "Access to Petstore orders"
+  # - name: "user"
+  #   description: "Operations about user"
+  #   externalDocs:
+  #     description: "Find out more about our store"
+  #     url: "http://swagger.io"
 schemes:
   - "https"
   - "http"
 paths:
-  /pet/{petId}/uploadImage:
+  oauth-{environment}.cargosprintgroup.com/oauth2/token?grant_type=client_credentials:
     post:
       tags:
-        - "pet"
-      summary: "uploads an image"
+        - "oauth"
+      summary: "get access token"
       description: ""
-      operationId: "uploadFile"
+      operationId: "getToken"
       consumes:
-        - "multipart/form-data"
+        - "application/json"
       produces:
         - "application/json"
       parameters:
-        - name: "petId"
-          in: "path"
-          description: "ID of pet to update"
+        - name: "X-APP-ID"
+          in: "header"
+          description: "Assigned ID associated to client application"
           required: true
-          type: "integer"
-          format: "int64"
-        - name: "additionalMetadata"
-          in: "formData"
-          description: "Additional data to pass to server"
-          required: false
           type: "string"
-        - name: "file"
-          in: "formData"
-          description: "file to upload"
-          required: false
-          type: "file"
+        - name: "Authorization"
+          in: "header"
+          description: "Basic access token with client credentials"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-        - petstore_auth:
-            - "write:pets"
-            - "read:pets"
+            $ref: "#/definitions/getTokenApiResponse"
+      # security:
+      #   - petstore_auth:
+      #       - "write:pets"
+      #       - "read:pets"
   /pet:
     post:
       tags:
@@ -598,16 +592,18 @@ securityDefinitions:
       read:pets: "read your pets"
       write:pets: "modify pets in your account"
 definitions:
-  ApiResponse:
+  getTokenApiResponse:
     type: "object"
     properties:
-      code:
+      access_token:
+        type: "string"
+      scope:
+        type: "string"
+      token_type:
+        type: "string"
+      expires_in:
         type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
+        format: "int64"
   Category:
     type: "object"
     properties:
