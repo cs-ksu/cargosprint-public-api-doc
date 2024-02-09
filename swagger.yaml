@@ -39,10 +39,10 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-                enum: 
-                  - "" # Production server
-                  - develop # Development server
-                  - staging # Staging server
+              enum:
+                - "" # Production server
+                - develop # Development server
+                - staging # Staging server
       summary: "get access token"
       operationId: "getToken"
       requestBody:
@@ -74,10 +74,10 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-                enum:
-                  - "" # Production server
-                  - develop # Development server
-                  - staging # Staging server
+              enum:
+                - "" # Production server
+                - develop # Development server
+                - staging # Staging server
       summary: "search for facilities"
       operationId: "searchFacilities"
       requestBody:
@@ -124,10 +124,10 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-                enum:
-                  - "" # Production server
-                  - develop # Development server
-                  - staging # Staging server
+              enum:
+                - "" # Production server
+                - develop # Development server
+                - staging # Staging server
       summary: "submit a payment"
       operationId: "submitPayment"
       requestBody:
