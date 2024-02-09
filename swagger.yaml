@@ -1,11 +1,6 @@
----
-openapi: 3.0.0
+openapi: "3.0.0"
 info:
-  description:
-    "This This is a host for cargosprint public api documentation. You\
-    \ can use our API to search facilities and make payments. We are currently\
-    \  in development and will have more features coming soon. You can also visit\
-    \ [CargoSprint's main website.](https://cargosprint.com/)"
+  description: "This is a host for cargosprint public api documentation. You can use our API to search facilities and make payments. We are currently in development and will have more features coming soon. You can also visit CargoSprint's main website."
   version: "1.0.0"
   title: "CargoSprint Public Api Swagger"
   termsOfService: "https://cargosprint.com/legal/terms-of-use/sprintpay"
@@ -14,8 +9,15 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: ""
-basePath: ""
+servers:
+  - url: "{scheme}://{environment}.cargosprintgroup.com"
+    variables:
+      scheme:
+        default: "https"
+        enum: ["http", "https"]
+      environment:
+        default: "production"
+        description: "Environment API is being called. Production does not have an identifier."
 tags:
   - name: "authentication"
     description: "Token needed to access service APIs"
@@ -23,120 +25,61 @@ tags:
     description: "List facilities"
   - name: "payment"
     description: "Make payment to facility"
-schemes:
-  - "https"
-  - "http"
-servers:
-  - url: https://oauth-{environment}.cargosprintgroup.com
-    description: Override base path for all operations with the /oauth2/token path
-    variables:
-      environment:
-        default: # Production server
-        enum:
-          - develop # Development server
-          - staging
-  - url: https://facility-{environment}.cargosprintgroup.com
-    description: Override base path for all operations with the /facility path
-    variables:
-      environment:
-        default: # Production server
-        enum:
-          - develop # Development server
-          - staging
-  - url: https://cart-{environment}.cargosprintgroup.com
-    description: Override base path for all operations with the /payment path
-    variables:
-      environment:
-        default: # Production server
-        enum:
-          - develop # Development server
-          - staging
 paths:
-  /oauth2/token?grant_type=client_credentials:
+  /oauth2/token:
     post:
       tags:
         - "authentication"
       summary: "get access token"
-      description: ""
       operationId: "getToken"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "environment"
-          in: "path"
-          description: "Environment API is being called. Production does not have an identifier."
-          required: true
-          type: "string"
-        - name: "X-APP-ID"
-          in: "header"
-          description: "Assigned ID associated to client application"
-          required: true
-          type: "string"
-        - name: "Authorization"
-          in: "header"
-          description: "Basic access token with client credentials"
-          required: true
-          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                grant_type:
+                  type: "string"
+                  default: "client_credentials"
       responses:
         200:
           description: "successful operation"
-          schema:
-            $ref: "#/definitions/getTokenApiResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getTokenApiResponse"
   /facilities:
     post:
       tags:
         - "facility"
       summary: "search for facilities"
-      description: ""
       operationId: "searchFacilities"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "environment"
-          in: "path"
-          description: "Environment API is being called. Production does not have an identifier."
-          required: true
-          type: "string"
-        - name: "X-APP-ID"
-          in: "header"
-          description: "Assigned ID associated to client application"
-          required: true
-          type: "string"
-        - name: "Authorization"
-          in: "header"
-          description: "Oauth access token"
-          required: true
-          type: "string"
-        - name: "name"
-          in: "query"
-          description: "The name for facility"
-          required: false
-          type: "string"
-        - name: "firmsCode"
-          in: "query"
-          description: "The code for the firm"
-          required: false
-          type: "string"
-        - name: "airportCode"
-          in: "query"
-          description: "The code for the airline"
-          required: false
-          type: "string"
-        - name: "airlinePrefix"
-          in: "query"
-          description: "The airline prefix code"
-          required: false
-          type: "integer"
-          format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                  description: "The name for facility"
+                firmsCode:
+                  type: "string"
+                  description: "The code for the firm"
+                airportCode:
+                  type: "string"
+                  description: "The code for the airline"
+                airlinePrefix:
+                  type: "integer"
+                  format: "int64"
+                  description: "The airline prefix code"
       responses:
         200:
           description: "successful operation"
-          schema:
-            $ref: "#/definitions/searchFacilitiesResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/searchFacilitiesResponse"
         400:
           description: "Invalid Order"
       security:
@@ -147,173 +90,30 @@ paths:
       tags:
         - "payment"
       summary: "submit a payment"
-      description: ""
       operationId: "submitPayment"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "environment"
-          in: "path"
-          description: "Environment API is being called. Production does not have an identifier."
-          required: true
-          type: "string"
-        - in: "body"
-          name: "body"
-          description: "List of payment request object"
-          required: true
-          schema:
-            type: "object"
-            items:
-              $ref: "#/definitions/PaymentRequest"
-      responses:
-        default:
-          description: "successful operation"
-      security:
-        - cargosprint_auth:
-            - "api.cart:write"
-securityDefinitions:
-  X-APP-ID:
-    type: "apiKey"
-    name: "app_id"
-    in: "header"
-  cargosprint_auth:
-    type: "oauth2"
-    authorizationUrl: "oauth-{environment}.cargosprintgroup.com/oauth2/token"
-    flow: "implicit"
-    scopes:
-      api.facility:read: "read facilities"
-      api.cart:write: "modify/create payments in cart"
-definitions:
-  getTokenApiResponse:
-    type: "object"
-    properties:
-      access_token:
-        type: "string"
-      scope:
-        type: "string"
-      token_type:
-        type: "string"
-      expires_in:
-        type: "integer"
-        format: "int64"
-  searchFacilitiesResponse:
-    type: "object"
-    properties:
-      content:
-        type: "array"
-        items:
-          type: "object"
-          properties:
-            id:
-              type: "integer"
-              format: "int64"
-            name:
-              type: "string"
-            airportCode:
-              type: "string"
-            firmsCode:
-              type: "string"
-            prefixes:
-              type: "string"
-            prefix:
-              type: "string"
-            awbFieldType:
-              type: "string"
-            awbFieldLabel:
-              type: "string"
-            hawbFieldLabel:
-              type: "string"
-            addressDTO:
+      requestBody:
+        content:
+          application/json:
+            schema:
               type: "object"
-              properties:
-                addressLine1:
-                  type: "string"
-                city:
-                  type: "string"
-                state:
-                  type: "string"
-                zip:
-                  type: "string"
-      pageable:
-        type: "object"
-        properties:
-          sort:
-            type: "object"
-            properties:
-              unsorted:
-                type: "boolean"
-              sorted:
-                type: "boolean"
-              empty:
-                type: "boolean"
-          pageSize:
-            type: "integer"
-            format: "int64"
-          pageNumber:
-            type: "integer"
-            format: "int64"
-          offset:
-            type: "integer"
-            format: "int64"
-          unpaged:
-            type: "boolean"
-          paged:
-            type: "boolean"
-      totalElements:
-        type: "integer"
-        format: "int64"
-      totalPages:
-        type: "integer"
-        format: "int64"
-      last:
-        type: "boolean"
-      numberOfElements:
-        type: "integer"
-        format: "int64"
-      first:
-        type: "boolean"
-      size:
-        type: "integer"
-        format: "int64"
-      number:
-        type: "integer"
-        format: "int64"
-      sort:
-        type: "object"
-        properties:
-          unsorted:
-            type: "boolean"
-          sorted:
-            type: "boolean"
-          empty:
-            type: "boolean"
-      empty:
-        type: "boolean"
-  PaymentRequest:
-    type: "array"
-    items:
+      responses:
+        200:
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: "object"
+components:
+  securitySchemes:
+    cargosprint_auth:
+      type: "oauth2"
+      flows:
+        clientCredentials:
+          tokenUrl: "/oauth2/token"
+          scopes:
+            api.facility:read: ""
+  schemas:
+    getTokenApiResponse:
       type: "object"
-      properties:
-        awb:
-          type: "string"
-        hawb:
-          type: "string"
-        amount:
-          type: "string"
-        customerReference:
-          type: "string"
-        facility:
-          type: "object"
-          properties:
-            id:
-              type: "integer"
-              format: "int64"
-        paymentType:
-          type: "string"
-        notificationEmail:
-          type: "string"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+    searchFacilitiesResponse:
+      type: "object"
