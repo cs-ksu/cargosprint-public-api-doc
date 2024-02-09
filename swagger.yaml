@@ -32,6 +32,8 @@ tags:
 paths:
   /oauth2/token?grant_type=client_credentials:
     post:
+      security:
+        - BasicAuth: []
       tags:
         - "authentication"
       servers:
@@ -44,8 +46,6 @@ paths:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
-      security:
-        - BasicAuth: []
       summary: "get access token"
       operationId: "getToken"
       parameters:
@@ -68,10 +68,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/getTokenApiResponse"
+        401:
+          $ref: "#/components/schemas/unauthorizedError"
   /facilities:
     post:
       security:
-        - OAuth2: ["api.facility:read"]
+        - BearerAuth: []
       tags:
         - "facility"
       servers:
@@ -147,7 +149,7 @@ paths:
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
       security:
-        - OAuth2: ["api.cart:write"]
+        - BearerAuth: []
       summary: "submit a payment"
       operationId: "submitPayment"
       parameters:
@@ -173,19 +175,25 @@ paths:
                 type: "object"
 components:
   securitySchemes:
-    OAuth2:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: https://oauth-staging.com/oauth2/token
-          tokenUrl: https://oauth-staging.com/oauth2/token
-          scopes:
-            api.facility:read: Grants read access to facility
-            api.cart:write: Grants write access to cart
+    # OAuth2:
+    #   type: oauth2
+    #   description:
+    #   flows:
+    #     clientCredentials:
+    #       tokenUrl: https://oauth-staging.com/oauth2/token
+    #       scopes:
+    #         api.facility:read: Grants read access to facility
+    #         api.cart:write: Grants write access to cart
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
     BasicAuth:
       type: http
       scheme: basic
   schemas:
+    unauthorizedError:
+      description: Access token is missing or invalid
     getTokenApiResponse:
       type: "object"
       properties:
