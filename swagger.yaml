@@ -30,6 +30,19 @@ paths:
     post:
       tags:
         - "authentication"
+      servers:
+        - url: "{scheme}://oauth-{environment}.cargosprintgroup.com"
+          variables:
+            scheme:
+              default: "https"
+              enum: ["http", "https"]
+            environment:
+              description: "Environment API is being called. Production does not have an identifier."
+              default: # Production server
+                enum:
+                  -  # Production server
+                  - develop # Development server
+                  - staging # Staging server
       summary: "get access token"
       operationId: "getToken"
       requestBody:
@@ -52,6 +65,19 @@ paths:
     post:
       tags:
         - "facility"
+      servers:
+        - url: "{scheme}://facility-{environment}.cargosprintgroup.com"
+          variables:
+            scheme:
+              default: "https"
+              enum: ["http", "https"]
+            environment:
+              description: "Environment API is being called. Production does not have an identifier."
+              default: # Production server
+                enum:
+                  -  # Production server
+                  - develop # Development server
+                  - staging # Staging server
       summary: "search for facilities"
       operationId: "searchFacilities"
       requestBody:
@@ -89,6 +115,19 @@ paths:
     post:
       tags:
         - "payment"
+      servers:
+        - url: "{scheme}://cart-{environment}.cargosprintgroup.com"
+          variables:
+            scheme:
+              default: "https"
+              enum: ["http", "https"]
+            environment:
+              description: "Environment API is being called. Production does not have an identifier."
+              default: # Production server
+                enum:
+                  -  # Production server
+                  - develop # Development server
+                  - staging # Staging server
       summary: "submit a payment"
       operationId: "submitPayment"
       requestBody:
