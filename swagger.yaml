@@ -27,10 +27,19 @@ schemes:
   - "https"
   - "http"
 paths:
-  oauth-{environment}.cargosprintgroup.com/oauth2/token?grant_type=client_credentials:
+  /oauth2/token?grant_type=client_credentials:
     post:
       tags:
         - "authentication"
+      servers:
+        - url: https://oauth-{environment}.cargosprintgroup.com
+          description: Override base path for all operations with the /oauth2/token path
+          variables:
+            environment:
+              default: # Production server
+              enum:
+                - develop # Development server
+                - staging
       summary: "get access token"
       description: ""
       operationId: "getToken"
