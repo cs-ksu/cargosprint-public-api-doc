@@ -33,7 +33,7 @@ paths:
   /oauth2/token?grant_type=client_credentials:
     post:
       security:
-        - BasicAuth: []
+        - basicAuth: []
       tags:
         - "authentication"
       servers:
@@ -77,7 +77,7 @@ paths:
   /facilities:
     post:
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       tags:
         - "facility"
       servers:
@@ -153,7 +153,7 @@ paths:
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
       security:
-        - BearerAuth: []
+        - bearerAuth: []
       summary: "submit a payment"
       operationId: "submitPayment"
       parameters:
@@ -188,11 +188,11 @@ components:
     #       scopes:
     #         api.facility:read: Grants read access to facility
     #         api.cart:write: Grants write access to cart
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-    BasicAuth:
+    basicAuth:
       type: http
       scheme: basic
   schemas:
