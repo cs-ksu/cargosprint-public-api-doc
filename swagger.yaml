@@ -19,16 +19,10 @@ basePath: ""
 tags:
   - name: "authentication"
     description: "Token needed to access service APIs"
-  #   externalDocs:
-  #     description: "Find out more"
-  #     url: "http://swagger.io"
   - name: "facility"
     description: "List facilities"
-  # - name: "user"
-  #   description: "Operations about user"
-  #   externalDocs:
-  #     description: "Find out more about our store"
-  #     url: "http://swagger.io"
+  - name: "payment"
+    description: "Make payment to facility"
 schemes:
   - "https"
   - "http"
@@ -64,305 +58,97 @@ paths:
       #   - petstore_auth:
       #       - "write:pets"
       #       - "read:pets"
-  facility-{environment}.cargosprintgroup.com/facilities?name={facilityName}:
+  facility-{environment}.cargosprintgroup.com/facilities?name={facilityName}&firmsCode={firmsCode}&airportCode={airportCode}&airlinePrefix={airlinePrefix}:
     post:
       tags:
         - "facility"
-      summary: "Search for a specific facility"
+      summary: "search for facilities"
       description: ""
-      operationId: "searchFacility"
+      operationId: "searchFacilities"
       consumes:
         - "application/json"
       produces:
         - "application/json"
       parameters:
+      - name: "X-APP-ID"
+          in: "header"
+          description: "Assigned ID associated to client application"
+          required: true
+          type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "Oauth access token"
+          required: true
+          type: "string"
+        - name: "facilityName"
+          in: "query"
+          description: "The name for facility"
+          required: false
+          type: "string"
+        - name: "firmsCode"
+          in: "query"
+          description: "The code for the firm"
+          required: false
+          type: "string"
+        - name: "airportCode"
+          in: "query"
+          description: "The code for the airline"
+          required: false
+          type: "string"
+        - name: "airlinePrefix"
+          in: "query"
+          description: "The airline prefix code"
+          required: false
+          type: "integer"
+          format: "int64"
       responses:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/Order"
+            $ref: "#/definitions/searchFacilitiesResponse"
         400:
           description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
+      security:
+        - cargosprint_auth:
+            - "api.facility:read"
+  cart-{environment}.cargosprintgroup.com/payment:
+    post:
       tags:
-        - "store"
-      summary: "Find purchase order by ID"
-      description:
-        "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
+        - "payment"
+      summary: "submit a payment"
+      description: ""
+      operationId: "submitPayment"
+      consumes:
+        - "application/json"
       produces:
         - "application/json"
-        - "application/xml"
       parameters:
-        - name: "orderId"
-          in: "path"
-          description: "ID of pet that needs to be fetched"
+        - in: "body"
+          name: "body"
+          description: "List of payment request object"
           required: true
-          type: "integer"
-          maximum: 10
-          minimum: 1
-          format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-        - "store"
-      summary: "Delete purchase order by ID"
-      description:
-        "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - name: "orderId"
-          in: "path"
-          description: "ID of the order that needs to be deleted"
-          required: true
-          type: "integer"
-          minimum: 1
-          format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-        - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-        - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
           schema:
             type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
+            items:
+              $ref: "#/definitions/PaymentRequest"
+      responses:
+        default:
+          description: "successful operation"
       security:
-        - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-        - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "List of user object"
-          required: true
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-        - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "List of user object"
-          required: true
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-        - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - name: "username"
-          in: "path"
-          description: "The name that needs to be fetched. Use user1 for testing. "
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-        - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - name: "username"
-          in: "path"
-          description: "name that need to be updated"
-          required: true
-          type: "string"
-        - in: "body"
-          name: "body"
-          description: "Updated user object"
-          required: true
-          schema:
-            $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-        - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - name: "username"
-          in: "path"
-          description: "The name that needs to be deleted"
-          required: true
-          type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-        - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - name: "username"
-          in: "query"
-          description: "The user name for login"
-          required: true
-          type: "string"
-        - name: "password"
-          in: "query"
-          description: "The password for login in clear text"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-        - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-        - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-        - "application/xml"
-      parameters:
-        - in: "body"
-          name: "body"
-          description: "Created user object"
-          required: true
-          schema:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
+        - cargosprint_auth:
+            - "api.cart:write"
 securityDefinitions:
-  api_key:
+  X-APP-ID:
     type: "apiKey"
-    name: "api_key"
+    name: "app_id"
     in: "header"
-  petstore_auth:
+  cargosprint_auth:
     type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
+    authorizationUrl: "oauth-{environment}.cargosprintgroup.com/oauth2/token"
     flow: "implicit"
     scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
+      api.facility:read: "read facilities"
+      api.cart:write: "modify/create payments in cart"
 definitions:
   getTokenApiResponse:
     type: "object"
@@ -376,115 +162,122 @@ definitions:
       expires_in:
         type: "integer"
         format: "int64"
-  Category:
+  searchFacilitiesResponse:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-      - "name"
-      - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
+      content:
         type: "array"
-        xml:
-          wrapped: true
         items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-          - "available"
-          - "pending"
-          - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+              format: "int64"
+            name:
+              type: "string"
+            airportCode:
+              type: "string"
+            firmsCode:
+              type: "string"
+            prefixes:
+              type: "string"
+            prefix:
+              type: "string"
+            awbFieldType:
+              type: "string"
+            awbFieldLabel:
+              type: "string"
+            hawbFieldLabel:
+              type: "string"
+            addressDTO:
+              type: "object"
+              properties:
+                addressLine1:
+                  type: "string"
+                city:
+                  type: "string"
+                state:
+                  type: "string"
+                zip:
+                  type: "string"
+      pageable:
+        type: "object"
+        properties:
+          sort:
+            type: "object"
+            properties:
+              unsorted:
+                type: "boolean"
+              sorted:
+                type: "boolean"
+              empty:
+                type: "boolean"
+          pageSize:
+            type: "integer"
+            format: "int64"
+          pageNumber:
+            type: "integer"
+            format: "int64"
+          offset:
+            type: "integer"
+            format: "int64"
+          unpaged:
+            type: "boolean"
+          paged:
+            type: "boolean"
+      totalElements:
         type: "integer"
         format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
+      totalPages:
         type: "integer"
         format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-          - "placed"
-          - "approved"
-          - "delivered"
-      complete:
+      last:
         type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
+      numberOfElements:
         type: "integer"
         format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
+      first:
+        type: "boolean"
+      size:
         type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
+        format: "int64"
+      number:
+        type: "integer"
+        format: "int64"
+      sort:
+        type: "object"
+            properties:
+              unsorted:
+                type: "boolean"
+              sorted:
+                type: "boolean"
+              empty:
+                type: "boolean"
+      empty:
+        type: "boolean"
+  PaymentRequest:
+    type: "array"
+    items:
+      type: object
+      properties:
+        awb:
+          type: "string"
+        hawb:
+          type: "string"
+        amount:
+          type: "string"
+        customerReference:
+          type: "string"
+        facility:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+              format: "int64"
+        paymentType:
+          type: "string"
+        notificationEmail:
+          type: "string"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
