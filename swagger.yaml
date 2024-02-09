@@ -54,10 +54,6 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/getTokenApiResponse"
-      # security:
-      #   - petstore_auth:
-      #       - "write:pets"
-      #       - "read:pets"
   facility-{environment}.cargosprintgroup.com/facilities?name={facilityName}&firmsCode={firmsCode}&airportCode={airportCode}&airlinePrefix={airlinePrefix}:
     post:
       tags:
@@ -70,7 +66,7 @@ paths:
       produces:
         - "application/json"
       parameters:
-      - name: "X-APP-ID"
+        - name: "X-APP-ID"
           in: "header"
           description: "Assigned ID associated to client application"
           required: true
