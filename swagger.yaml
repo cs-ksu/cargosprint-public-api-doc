@@ -20,6 +20,7 @@ servers:
         enum: ["oauth", "facility", "cart"]
       environment:
         default: ""
+        enum: ["", "-develop", "-staging"]
         description: "Environment API is being called. Production does not have an identifier."
 tags:
   - name: "authentication"
