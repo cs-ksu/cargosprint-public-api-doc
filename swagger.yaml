@@ -1,5 +1,5 @@
 ---
-swagger: "2.0"
+openapi: 3.0.0
 info:
   description:
     "This This is a host for cargosprint public api documentation. You\
