@@ -45,7 +45,7 @@ paths:
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
       security:
-        - BasicAuth: [] 
+        - BasicAuth: []
       summary: "get access token"
       operationId: "getToken"
       parameters:
@@ -83,7 +83,7 @@ paths:
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
       security:
-        - OAuth2: ["api.facility:read"] 
+        - OAuth2: ["api.facility:read"]
       summary: "search for facilities"
       operationId: "searchFacilities"
       parameters:
@@ -132,9 +132,6 @@ paths:
                 $ref: "#/components/schemas/searchFacilitiesResponse"
         400:
           description: "Invalid Order"
-      security:
-        - cargosprint_auth:
-            - "api.facility:read"
   /payment:
     post:
       tags:
@@ -150,7 +147,7 @@ paths:
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
       security:
-        - OAuth2: ["api.cart:write"] 
+        - OAuth2: ["api.cart:write"]
       summary: "submit a payment"
       operationId: "submitPayment"
       requestBody:
