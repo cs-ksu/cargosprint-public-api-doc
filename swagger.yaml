@@ -266,25 +266,25 @@ components:
               type: "boolean"
         empty:
           type: "boolean"
-  paymentRequest:
-    type: "array"
-    items:
-      type: "object"
-      properties:
-        awb:
-          type: "string"
-        hawb:
-          type: "string"
-        amount:
-          type: "string"
-        customerReference:
-          type: "string"
-        facility:
-          type: "object"
-          properties:
-            id:
-              type: "integer"
-        paymentType:
-          type: "string"
-        notificationEmail:
-          type: "string"
+    paymentRequest:
+      type: "array"
+      items:
+        type: "object"
+        properties:
+          awb:
+            type: "string"
+          hawb:
+            type: "string"
+          amount:
+            type: "string"
+          customerReference:
+            type: "string"
+          facility:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+          paymentType:
+            type: "string"
+          notificationEmail:
+            type: "string"
