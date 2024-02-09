@@ -35,24 +35,22 @@ servers:
         enum:
           - develop # Development server
           - staging
-  servers:
-    - url: https://facility-{environment}.cargosprintgroup.com
-      description: Override base path for all operations with the /facility path
-      variables:
-        environment:
-          default: # Production server
-          enum:
-            - develop # Development server
-            - staging
-  servers:
-    - url: https://cart-{environment}.cargosprintgroup.com
-      description: Override base path for all operations with the /payment path
-      variables:
-        environment:
-          default: # Production server
-          enum:
-            - develop # Development server
-            - staging
+  - url: https://facility-{environment}.cargosprintgroup.com
+    description: Override base path for all operations with the /facility path
+    variables:
+      environment:
+        default: # Production server
+        enum:
+          - develop # Development server
+          - staging
+  - url: https://cart-{environment}.cargosprintgroup.com
+    description: Override base path for all operations with the /payment path
+    variables:
+      environment:
+        default: # Production server
+        enum:
+          - develop # Development server
+          - staging
 paths:
   /oauth2/token?grant_type=client_credentials:
     post:
