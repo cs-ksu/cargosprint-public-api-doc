@@ -26,20 +26,38 @@ tags:
 schemes:
   - "https"
   - "http"
+servers:
+  - url: https://oauth-{environment}.cargosprintgroup.com
+    description: Override base path for all operations with the /oauth2/token path
+    variables:
+      environment:
+        default: # Production server
+        enum:
+          - develop # Development server
+          - staging
+  servers:
+    - url: https://facility-{environment}.cargosprintgroup.com
+      description: Override base path for all operations with the /facility path
+      variables:
+        environment:
+          default: # Production server
+          enum:
+            - develop # Development server
+            - staging
+  servers:
+    - url: https://cart-{environment}.cargosprintgroup.com
+      description: Override base path for all operations with the /payment path
+      variables:
+        environment:
+          default: # Production server
+          enum:
+            - develop # Development server
+            - staging
 paths:
   /oauth2/token?grant_type=client_credentials:
     post:
       tags:
         - "authentication"
-      servers:
-        - url: https://oauth-{environment}.cargosprintgroup.com
-          description: Override base path for all operations with the /oauth2/token path
-          variables:
-            environment:
-              default: # Production server
-              enum:
-                - develop # Development server
-                - staging
       summary: "get access token"
       description: ""
       operationId: "getToken"
@@ -68,7 +86,7 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/getTokenApiResponse"
-  facility-{environment}.cargosprintgroup.com/facilities:
+  /facilities:
     post:
       tags:
         - "facility"
@@ -126,7 +144,7 @@ paths:
       security:
         - cargosprint_auth:
             - "api.facility:read"
-  cart-{environment}.cargosprintgroup.com/payment:
+  /payment:
     post:
       tags:
         - "payment"
