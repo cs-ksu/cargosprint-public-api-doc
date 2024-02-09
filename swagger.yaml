@@ -174,3 +174,5 @@ components:
       type: "object"
     searchFacilitiesResponse:
       type: "object"
+    PaymentRequest:
+      type: "object"
