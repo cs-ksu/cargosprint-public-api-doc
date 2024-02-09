@@ -39,6 +39,11 @@ paths:
       produces:
         - "application/json"
       parameters:
+        - name: "environment"
+          in: "path"
+          description: "Environment API is being called. Production does not have an identifier."
+          required: true
+          type: "string"
         - name: "X-APP-ID"
           in: "header"
           description: "Assigned ID associated to client application"
@@ -54,7 +59,7 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/getTokenApiResponse"
-  facility-{environment}.cargosprintgroup.com/facilities?name={facilityName}&firmsCode={firmsCode}&airportCode={airportCode}&airlinePrefix={airlinePrefix}:
+  facility-{environment}.cargosprintgroup.com/facilities:
     post:
       tags:
         - "facility"
@@ -66,6 +71,11 @@ paths:
       produces:
         - "application/json"
       parameters:
+        - name: "environment"
+          in: "path"
+          description: "Environment API is being called. Production does not have an identifier."
+          required: true
+          type: "string"
         - name: "X-APP-ID"
           in: "header"
           description: "Assigned ID associated to client application"
@@ -76,7 +86,7 @@ paths:
           description: "Oauth access token"
           required: true
           type: "string"
-        - name: "facilityName"
+        - name: "name"
           in: "query"
           description: "The name for facility"
           required: false
@@ -119,6 +129,11 @@ paths:
       produces:
         - "application/json"
       parameters:
+        - name: "environment"
+          in: "path"
+          description: "Environment API is being called. Production does not have an identifier."
+          required: true
+          type: "string"
         - in: "body"
           name: "body"
           description: "List of payment request object"
