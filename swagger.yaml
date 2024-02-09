@@ -44,6 +44,8 @@ paths:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
+      security:
+        - BasicAuth: [] 
       summary: "get access token"
       operationId: "getToken"
       parameters:
@@ -80,6 +82,8 @@ paths:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
+      security:
+        - OAuth2: ["api.facility:read"] 
       summary: "search for facilities"
       operationId: "searchFacilities"
       parameters:
@@ -145,6 +149,8 @@ paths:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
+      security:
+        - OAuth2: ["api.cart:write"] 
       summary: "submit a payment"
       operationId: "submitPayment"
       requestBody:
@@ -163,13 +169,18 @@ paths:
                 type: "object"
 components:
   securitySchemes:
-    cargosprint_auth:
-      type: "oauth2"
+    OAuth2:
+      type: oauth2
       flows:
-        clientCredentials:
-          tokenUrl: "/oauth2/token"
+        authorizationCode:
+          authorizationUrl: https://oauth-staging.com/oauth2/token
+          tokenUrl: https://oauth-staging.com/oauth2/token
           scopes:
-            api.facility:read: ""
+            api.facility:read: Grants read access to facility
+            api.cart:write: Grants write access to cart
+    BasicAuth:
+      type: http
+      scheme: basic
   schemas:
     getTokenApiResponse:
       type: "object"
