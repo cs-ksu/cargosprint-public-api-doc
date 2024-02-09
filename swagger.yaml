@@ -242,19 +242,19 @@ definitions:
         format: "int64"
       sort:
         type: "object"
-            properties:
-              unsorted:
-                type: "boolean"
-              sorted:
-                type: "boolean"
-              empty:
-                type: "boolean"
+        properties:
+          unsorted:
+            type: "boolean"
+          sorted:
+            type: "boolean"
+          empty:
+            type: "boolean"
       empty:
         type: "boolean"
   PaymentRequest:
     type: "array"
     items:
-      type: object
+      type: "object"
       properties:
         awb:
           type: "string"
