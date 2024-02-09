@@ -69,7 +69,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/getTokenApiResponse"
         401:
-          $ref: "#/components/schemas/unauthorizedError"
+          description: "unauth operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/unauthorizedError"
   /facilities:
     post:
       security:
@@ -191,10 +195,10 @@ components:
     BasicAuth:
       type: http
       scheme: basic
-  responses:
-    unauthorizedError:
-      description: Access token is missing or invalid
   schemas:
+    unauthorizedError:
+      type: "string"
+      description: "Access token is missing or invalid"
     getTokenApiResponse:
       type: "object"
       properties:
