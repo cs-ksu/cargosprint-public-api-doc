@@ -173,7 +173,118 @@ components:
   schemas:
     getTokenApiResponse:
       type: "object"
+      properties:
+        access_token:
+          type: "string"
+        scope:
+          type: "string"
+        token_type:
+          type: "string"
+        expires_in:
+          type: "integer"
     searchFacilitiesResponse:
       type: "object"
-    PaymentRequest:
+      properties:
+        content:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              name:
+                type: "string"
+              airportCode:
+                type: "string"
+              firmsCode:
+                type: "string"
+              prefixes:
+                type: "string"
+              prefix:
+                type: "string"
+              awbFieldType:
+                type: "string"
+              awbFieldLabel:
+                type: "string"
+              hawbFieldLabel:
+                type: "string"
+              addressDTO:
+                type: "object"
+                properties:
+                  addressLine1:
+                    type: "string"
+                  city:
+                    type: "string"
+                  state:
+                    type: "string"
+                  zip:
+                    type: "string"
+        pageable:
+          type: "object"
+          properties:
+            sort:
+              type: "object"
+              properties:
+                unsorted:
+                  type: "boolean"
+                sorted:
+                  type: "boolean"
+                empty:
+                  type: "boolean"
+            pageSize:
+              type: "integer"
+            pageNumber:
+              type: "integer"
+            offset:
+              type: "integer"
+            unpaged:
+              type: "boolean"
+            paged:
+              type: "boolean"
+        totalElements:
+          type: "integer"
+        totalPages:
+          type: "integer"
+        last:
+          type: "boolean"
+        numberOfElements:
+          type: "integer"
+        first:
+          type: "boolean"
+        size:
+          type: "integer"
+        number:
+          type: "integer"
+        sort:
+          type: "object"
+          properties:
+            unsorted:
+              type: "boolean"
+            sorted:
+              type: "boolean"
+            empty:
+              type: "boolean"
+        empty:
+          type: "boolean"
+  PaymentRequest:
+    type: "array"
+    items:
       type: "object"
+      properties:
+        awb:
+          type: "string"
+        hawb:
+          type: "string"
+        amount:
+          type: "string"
+        customerReference:
+          type: "string"
+        facility:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+        paymentType:
+          type: "string"
+        notificationEmail:
+          type: "string"
