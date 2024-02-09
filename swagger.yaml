@@ -10,7 +10,7 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 servers:
-  - url: "{scheme}://{service}-{environment}.cargosprintgroup.com"
+  - url: "{scheme}://{service}{environment}.cargosprintgroup.com"
     variables:
       scheme:
         default: "https"
@@ -29,12 +29,12 @@ tags:
   - name: "payment"
     description: "Make payment to facility"
 paths:
-  /oauth2/token:
+  /oauth2/token?grant_type=client_credentials:
     post:
       tags:
         - "authentication"
       servers:
-        - url: "{scheme}://oauth-{environment}.cargosprintgroup.com"
+        - url: "{scheme}://oauth{environment}.cargosprintgroup.com"
           variables:
             scheme:
               default: "https"
@@ -42,18 +42,18 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-              enum: ["", "develop", "staging"]
+              enum: ["", "-develop", "-staging"]
       summary: "get access token"
       operationId: "getToken"
       parameters:
-        - name: "X-APP-ID"
-          in: "header"
+        - in: "header"
+          name: "X-APP-ID"
           description: "Assigned ID associated to client application"
           required: true
           schema:
             type: "string"
-        - name: "Authorization"
-          in: "header"
+        - in: "header"
+          name: "Authorization"
           description: "Basic access token with client credentials"
           required: true
           schema:
@@ -70,7 +70,7 @@ paths:
       tags:
         - "facility"
       servers:
-        - url: "{scheme}://facility-{environment}.cargosprintgroup.com"
+        - url: "{scheme}://facility{environment}.cargosprintgroup.com"
           variables:
             scheme:
               default: "https"
@@ -78,42 +78,42 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-              enum: ["", "develop", "staging"]
+              enum: ["", "-develop", "-staging"]
       summary: "search for facilities"
       operationId: "searchFacilities"
       parameters:
-        - name: "X-APP-ID"
-          in: "header"
+        - in: "header"
+          name: "X-APP-ID"
           description: "Assigned ID associated to client application"
           required: true
           schema:
             type: "string"
-        - name: "Authorization"
-          in: "header"
+        - in: "header"
+          name: "Authorization"
           description: "Oauth access token"
           required: true
           schema:
             type: "string"
-        - name: "name"
-          in: "query"
+        - in: "query"
+          name: "name"
           description: "The name for facility"
           required: false
           schema:
             type: "string"
-        - name: "firmsCode"
-          in: "query"
+        - in: "query"
+          name: "firmsCode"
           description: "The code for the firm"
           required: false
           schema:
             type: "string"
-        - name: "airportCode"
-          in: "query"
+        - in: "query"
+          name: "airportCode"
           description: "The code for the airline"
           required: false
           schema:
             type: "string"
-        - name: "airlinePrefix"
-          in: "query"
+        - in: "query"
+          name: "airlinePrefix"
           description: "The airline prefix code"
           required: false
           schema:
@@ -135,7 +135,7 @@ paths:
       tags:
         - "payment"
       servers:
-        - url: "{scheme}://cart-{environment}.cargosprintgroup.com"
+        - url: "{scheme}://cart{environment}.cargosprintgroup.com"
           variables:
             scheme:
               default: "https"
@@ -143,7 +143,7 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-              enum: ["", "develop", "staging"]
+              enum: ["", "-develop", "-staging"]
       summary: "submit a payment"
       operationId: "submitPayment"
       requestBody:
