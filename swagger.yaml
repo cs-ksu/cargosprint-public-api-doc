@@ -10,13 +10,16 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 servers:
-  - url: "{scheme}://{environment}.cargosprintgroup.com"
+  - url: "{scheme}://{service}-{environment}.cargosprintgroup.com"
     variables:
       scheme:
         default: "https"
         enum: ["http", "https"]
+      service:
+        default: "oauth"
+        enum: ["oauth", "facility", "cart"]
       environment:
-        default: "production"
+        default: ""
         description: "Environment API is being called. Production does not have an identifier."
 tags:
   - name: "authentication"
@@ -39,21 +42,22 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-              enum:
-                - "" # Production server
-                - develop # Development server
-                - staging # Staging server
+              enum: ["", "develop", "staging"]
       summary: "get access token"
       operationId: "getToken"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                grant_type:
-                  type: "string"
-                  default: "client_credentials"
+      parameters:
+        - name: "X-APP-ID"
+          in: "header"
+          description: "Assigned ID associated to client application"
+          required: true
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "Basic access token with client credentials"
+          required: true
+          schema:
+            type: "string"
       responses:
         200:
           description: "successful operation"
@@ -74,31 +78,46 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-              enum:
-                - "" # Production server
-                - develop # Development server
-                - staging # Staging server
+              enum: ["", "develop", "staging"]
       summary: "search for facilities"
       operationId: "searchFacilities"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: "object"
-              properties:
-                name:
-                  type: "string"
-                  description: "The name for facility"
-                firmsCode:
-                  type: "string"
-                  description: "The code for the firm"
-                airportCode:
-                  type: "string"
-                  description: "The code for the airline"
-                airlinePrefix:
-                  type: "integer"
-                  format: "int64"
-                  description: "The airline prefix code"
+      parameters:
+        - name: "X-APP-ID"
+          in: "header"
+          description: "Assigned ID associated to client application"
+          required: true
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "Oauth access token"
+          required: true
+          schema:
+            type: "string"
+        - name: "name"
+          in: "query"
+          description: "The name for facility"
+          required: false
+          schema:
+            type: "string"
+        - name: "firmsCode"
+          in: "query"
+          description: "The code for the firm"
+          required: false
+          schema:
+            type: "string"
+        - name: "airportCode"
+          in: "query"
+          description: "The code for the airline"
+          required: false
+          schema:
+            type: "string"
+        - name: "airlinePrefix"
+          in: "query"
+          description: "The airline prefix code"
+          required: false
+          schema:
+            type: "integer"
       responses:
         200:
           description: "successful operation"
@@ -124,17 +143,16 @@ paths:
             environment:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
-              enum:
-                - "" # Production server
-                - develop # Development server
-                - staging # Staging server
+              enum: ["", "develop", "staging"]
       summary: "submit a payment"
       operationId: "submitPayment"
       requestBody:
+        description: Optional description in *Markdown*
+        required: true
         content:
           application/json:
             schema:
-              type: "object"
+              $ref: "#/components/schemas/PaymentRequest"
       responses:
         200:
           description: "successful operation"
