@@ -44,8 +44,8 @@ paths:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
-      # security:
-      #   - BasicAuth: []
+      security:
+        - BasicAuth: []
       summary: "get access token"
       operationId: "getToken"
       parameters:
@@ -55,12 +55,12 @@ paths:
           required: true
           schema:
             type: "string"
-        - in: "header"
-          name: "Authorization"
-          description: "Basic access token with client credentials"
-          required: true
-          schema:
-            type: "string"
+        # - in: "header"
+        #   name: "Authorization"
+        #   description: "Basic access token with client credentials"
+        #   required: true
+        #   schema:
+        #     type: "string"
       responses:
         200:
           description: "successful operation"
@@ -70,8 +70,8 @@ paths:
                 $ref: "#/components/schemas/getTokenApiResponse"
   /facilities:
     post:
-      # security:
-      #     - OAuth2: ["api.facility:read"]
+      security:
+        - OAuth2: ["api.facility:read"]
       tags:
         - "facility"
       servers:
@@ -93,12 +93,12 @@ paths:
           required: true
           schema:
             type: "string"
-        - in: "header"
-          name: "Authorization"
-          description: "Oauth access token"
-          required: true
-          schema:
-            type: "string"
+        # - in: "header"
+        #   name: "Authorization"
+        #   description: "Oauth access token"
+        #   required: true
+        #   schema:
+        #     type: "string"
         - in: "query"
           name: "name"
           description: "The name for facility"
@@ -146,10 +146,17 @@ paths:
               description: "Environment API is being called. Production does not have an identifier."
               default: "" # Production server
               enum: ["", "-develop", "-staging"]
-      # security:
-      #   - OAuth2: ["api.cart:write"]
+      security:
+        - OAuth2: ["api.cart:write"]
       summary: "submit a payment"
       operationId: "submitPayment"
+      parameters:
+        - in: "header"
+          name: "X-APP-ID"
+          description: "Assigned ID associated to client application"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         description: Optional description in *Markdown*
         required: true
